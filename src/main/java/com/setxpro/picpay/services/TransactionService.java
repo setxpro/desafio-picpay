@@ -30,8 +30,6 @@ public class TransactionService {
     @Autowired
     private NotificationService notificationService;
 
-    private SendEmail sendEmail = new SendEmail();
-
     public Transaction createTransaction(TransactionDTO transaction) throws Exception {
         User sender = this.userService.findUserById(transaction.senderId());
         User receiver = this.userService.findUserById(transaction.receiverId());
@@ -71,8 +69,9 @@ public class TransactionService {
         // Send notifications about successfully transaction
         this.notificationService.sendNotification(sender, "Transação realizada com sucesso!");
         this.notificationService.sendNotification(receiver, "Transação recebida com sucesso!");
-        SendEmail.ServiceEmail("Transação realizada com sucesso!", sender.getEmail(), "Transação.");
-        SendEmail.ServiceEmail("Transação recebida com sucesso!", receiver.getEmail(), "Transação.");
+
+        ServiceEmail.Sender("Transação realizada "+ "no valor de R$"+ transaction.value() + "para " + receiver.getFirstName() +" "+ receiver.getLastName() + " com sucesso!", sender.getEmail(), "Transação.", transaction.value(), sender.getFirstName());
+        ServiceEmail.Sender("Transação recebida com sucesso!", receiver.getEmail(), "Transação.", transaction.value(), receiver.getFirstName());
         return newTransaction;
 
     }
