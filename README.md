@@ -8,7 +8,7 @@ tags:
 
 ## Reposiory base
 
-<a href="https://github.com/PicPay/picpay-desafio-backend">PICPAY</a>
+<a href="https://github.com/PicPay/picpay-desafio-backend">ACCESS PICPAY REPOSITORY</a>
 
 ## Participants
 
