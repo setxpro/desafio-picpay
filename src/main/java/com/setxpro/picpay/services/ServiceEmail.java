@@ -1,13 +1,28 @@
 package com.setxpro.picpay.services;
 
+import com.setxpro.picpay.domain.EmailSendUseCase;
+import org.hibernate.Session;
+
 import java.math.BigDecimal;
 import java.util.Properties;
-import javax.mail.internet.*;
-import javax.mail.Session;
 import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+//import javax.mail.Session;
 import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class ServiceEmail {
+    private EmailSendUseCase emailSendUseCase;
+
+    public ServiceEmail(EmailSendUseCase emailSendUseCase) {
+        this.emailSendUseCase = emailSendUseCase;
+    }
+
+    public void SendStatusTransaction(String body, String to, String subject, BigDecimal value, String name) {
+        emailSendUseCase.sendEmail(body, to, subject, value, name);
+    }
+
     public static void Sender(String body, String to, String subject, BigDecimal value, String name) {
         // Configurações do servidor SMTP e autenticação
         String host = "smtp.gmail.com"; // Substitua pelo seu servidor SMTP
@@ -21,16 +36,26 @@ public class ServiceEmail {
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", "587"); // A porta pode variar
 
-        // Cria uma sessão de email
-        Session session = Session.getInstance(props, new Authenticator() {
+
+        javax.mail.Session mailSession = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
             }
         });
 
+
+
+        // Cria uma sessão de email
+//        Session session = Session.getInstance(props, new Authenticator() {
+//            protected PasswordAuthentication getPasswordAuthentication() {
+//                return new PasswordAuthentication(username, password);
+//            }
+//        });
+
         try {
             // Cria uma mensagem de email
-            Message message = new MimeMessage(session);
+            Message message = new MimeMessage(mailSession);
+
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);
